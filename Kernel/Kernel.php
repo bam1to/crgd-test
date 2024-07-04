@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Kernel;
+namespace Kernel;
 
-use App\Kernel\Database\DatabaseBuilder;
-use App\Kernel\Database\Model;
+use Kernel\Database\DatabaseBuilder;
+use Kernel\Routing\Routing;
 
 class Kernel
 {
@@ -19,7 +19,7 @@ class Kernel
             DatabaseBuilder::getDatabase();
 
             // process routing
-
+            (new Routing())->processRouting();
         } catch (\Exception $e) {
             print_r($e->getMessage());
             die;

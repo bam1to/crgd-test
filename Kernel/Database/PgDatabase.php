@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Kernel\Database;
+namespace Kernel\Database;
 
-use App\Kernel\Config;
-use App\Kernel\Database\Exception\ConnectionException;
-use PDO;
+use Kernel\Config;
+use Kernel\Database\Exception\ConnectionException;
 
 class PgDatabase extends Database implements DatabaseInterface
 {
@@ -17,7 +16,7 @@ class PgDatabase extends Database implements DatabaseInterface
     protected function __construct()
     {
         try {
-            $this->pdoConnection = new PDO(
+            $this->pdoConnection = new \PDO(
                 dsn: Config::get('database.dsn'),
                 username: Config::get('database.username'),
                 password: Config::get('database.password')

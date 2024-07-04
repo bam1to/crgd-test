@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Kernel;
+namespace Kernel;
 
-use App\Kernel\Exception\NoFileException;
+use Kernel\Exception\NoFileException;
 
 class Config
 {

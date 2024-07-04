@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Kernel\Database;
+namespace Kernel\Database;
 
-use App\Kernel\Config;
-use App\Kernel\Database\Exception\WrongDatabaseTypeException;
+use Kernel\Config;
+use Kernel\Database\Exception\WrongDatabaseTypeException;
 
 class DatabaseBuilder
 {

@@ -2,8 +2,11 @@
 
 return [
     'base' => [
-        'project_root' => __DIR__ . '/src',
-        'kernel_root' => __DIR__ . '/Kernel'
+        'project_root' => __DIR__ . '/../src',
+        'kernel_root' => __DIR__ . '/../Kernel'
+    ],
+    'url' => [
+        'homepage' => '/login'
     ],
     'database' => [
         'type' => 'pgsql',
