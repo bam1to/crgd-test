@@ -18,7 +18,7 @@ class PgDatabase extends Database implements DatabaseInterface
     {
         try {
             $this->pdoConnection = new PDO(
-                dsn: Config::get('database.dns'),
+                dsn: Config::get('database.dsn'),
                 username: Config::get('database.username'),
                 password: Config::get('database.password')
             );

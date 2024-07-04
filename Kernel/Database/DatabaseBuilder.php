@@ -7,7 +7,7 @@ namespace App\Kernel\Database;
 use App\Kernel\Config;
 use App\Kernel\Database\Exception\WrongDatabaseTypeException;
 
-class DatabaseBulder
+class DatabaseBuilder
 {
     public static function getDatabase()
     {

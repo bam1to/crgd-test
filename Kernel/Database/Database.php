@@ -25,7 +25,7 @@ class Database
     public static function getInstance()
     {
         if (null === static::$instance) {
-            static::$instance = new Database();
+            static::$instance = new static();
         }
         return static::$instance;
     }
