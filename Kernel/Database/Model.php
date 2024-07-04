@@ -13,7 +13,7 @@ class Model
 
     public function __construct()
     {
-        $this->database = DatabaseBulder::getDatabase();
+        $this->database = DatabaseBuilder::getDatabase();
     }
 
     public function findOne(string $query = "", array $params = []): mixed
