@@ -2,11 +2,14 @@
 
 return [
     'base' => [
-        'project_root' => __DIR__ . '/../src',
-        'kernel_root' => __DIR__ . '/../Kernel'
+        'project_root' => dirname(__DIR__) . '/src',
+        'kernel_root' => dirname(__DIR__) . '/Kernel'
     ],
     'url' => [
-        'homepage' => '/login'
+        'homepage' => [
+            'before_login' => '/admin/login',
+            'after_login' => '/admin/dashboard'
+        ],
     ],
     'database' => [
         'type' => 'pgsql',
@@ -15,6 +18,6 @@ return [
         'password' => 'password'
     ],
     'twig' => [
-        'twig_path' => '/web'
+        'twig_path' => dirname(__DIR__) . '/src/View'
     ]
 ];
