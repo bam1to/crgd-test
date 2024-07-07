@@ -14,8 +14,11 @@ class UrlParser
 {
     public function parseUrl(): ?UrlDto
     {
-        $requestUri = $_SERVER['REQUEST_URI'];
-        $parts = explode('/', trim($requestUri, '/'));
+        $requestUri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
+        $parsedUrl = parse_url($requestUri);
+
+        $path = $parsedUrl['path'] ?? '';
+        $parts = explode('/', trim($path, '/'));
 
         if (empty($parts)) {
             return null;

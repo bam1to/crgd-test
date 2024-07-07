@@ -26,17 +26,11 @@ class Routing
                 }
                 $controllerInstance = new ($controller->getName());
                 $actionName = $action->name;
-                $controllerInstance->$actionName();
-            } else {
-                throw new RouteNotFoundException($urlDto->originalUrl . ' has not found.', 404);
+                echo $controllerInstance->$actionName();
+                exit();
             }
         }
-
-        // if doesn't set any request url, set default from config
-
-        // if only one - means controller with this name and its index action
-
-        // if more than one word after slash - find action with join name
+        throw new RouteNotFoundException($urlDto->originalUrl . ' has not found.', 404);
     }
 
     /**
