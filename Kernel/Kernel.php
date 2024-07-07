@@ -22,7 +22,10 @@ class Kernel
             (new Routing())->processRouting();
         } catch (\Exception $e) {
             print_r($e->getMessage());
-            die;
+        } catch (\Error $e) {
+            print_r($e->getMessage());
+        } finally {
+            die();
         }
     }
 }
