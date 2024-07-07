@@ -10,8 +10,6 @@ use Kernel\Database\Exception\ConnectionException;
 class PgDatabase extends Database implements DatabaseInterface
 {
     private readonly \PDO $pdoConnection;
-    private string $query = '';
-    private array $params = [];
 
     protected function __construct()
     {
@@ -26,36 +24,22 @@ class PgDatabase extends Database implements DatabaseInterface
         }
     }
 
-    public function setQuery(string $query): self
+    public function getStatement(string $query, array $params): \PDOStatement
     {
-        $this->query = $query;
-        return $this;
+        return $this->prepareStatement($query, $params);
     }
 
-    public function setParams(array $params): self
-    {
-        $this->params = $params;
-        return $this;
-    }
-
-    public function execute(): mixed
-    {
-        $statement = $this->prepareStatement();
-        $this->clearQuery();
-        return $statement;
-    }
-
-    private function prepareStatement(): \PDOStatement
+    private function prepareStatement(string $query, array $params): \PDOStatement
     {
         try {
-            $statement = $this->pdoConnection->prepare($this->query);
+            $statement = $this->pdoConnection->prepare($query);
 
             if ($statement === false) {
-                throw new \Exception('Cannot prepare statement for: ' . $this->query);
+                throw new \Exception('Cannot prepare statement for: ' . $query);
             }
 
-            foreach ($this->params as $param) {
-                $statement->bindValue($param[0], $param[1], $param[2]);
+            foreach ($params as $key => $param) {
+                $statement->bindValue($key, $param);
             }
 
             $statement->execute();
@@ -64,13 +48,7 @@ class PgDatabase extends Database implements DatabaseInterface
         } catch (\Exception $exeption) {
             throw new \Exception($exeption->getMessage());
         } catch (\PDOException $pdoException) {
-            throw new \Exception('Cannot prepare statement for: ' . $this->query);
+            throw new \Exception('Cannot prepare statement for: ' . $query, $pdoException->getCode(), $pdoException);
         }
-    }
-
-    private function clearQuery()
-    {
-        $this->query = '';
-        $this->params = [];
     }
 }

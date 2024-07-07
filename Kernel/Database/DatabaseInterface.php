@@ -6,9 +6,5 @@ namespace Kernel\Database;
 
 interface DatabaseInterface
 {
-    public function execute(): mixed;
-
-    public function setQuery(string $query): DatabaseInterface;
-
-    public function setParams(array $params): DatabaseInterface;
+    public function getStatement(string $query, array $params): \PDOStatement;
 }

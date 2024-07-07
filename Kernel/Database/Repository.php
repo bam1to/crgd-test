@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Kernel\Database;
 
 /**
- * Base class for all models
+ * Base class for all repositories
  */
-class Model
+class Repository
 {
     private readonly DatabaseInterface $database;
 
@@ -19,7 +19,7 @@ class Model
     public function findOne(string $query = "", array $params = []): mixed
     {
         try {
-            $statement = $this->database->setQuery($query)->setParams($params)->execute();
+            $statement = $this->database->getStatement($query, $params);
             return $statement->fetch(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
             // TODO: add exception handler
@@ -29,8 +29,18 @@ class Model
     public function findAll(string $query = "", array $params = []): array
     {
         try {
-            $statement = $this->database->setQuery($query)->setParams($params)->execute();
+            $statement = $this->database->getStatement($query, $params);
             return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            // TODO: add exception
+        }
+    }
+
+    public function insert(string $query = "", array $params = [])
+    {
+        try {
+            $statement = $this->database->getStatement($query, $params);
+            return $statement->fetch(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
             // TODO: add exception
         }
