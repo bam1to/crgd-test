@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+{% if not newsList is empty %}
+<div class="sub-container">
+    <h2 class="sec-h">All News</h2>
+    {% for news in newsList %}
+    <div class="info-row" data-news-id="{{news.newsId}}">
+        <div class="info-row-title">
+            {{news.title}}
+        </div>
+        <div class="info-row-description">
+            {{news.description}}
+        </div>
+        <div class="info-row-actions">
+            <button type="button" class="i-btn">
+                <i class="i-btn-edit"></i>
+            </button>
+            <button type="button" class="i-btn">
+
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="sub-container">
+    <form class="form" action="/admin/news/create" method="POST" id="create-news">
+        <h2 class="sec-h">Create News</h2>
+        <input class="form-input" required type="text" placeholder="Title" name="_title" id="news-title">
+        <textarea class="form-textarea" required name="_description" placeholder="Description" id="news-description"
+            cols="30" rows="10"></textarea>
+        <button class="btn btn-submit">Create</button>
+    </form>
+</div>
+<div class="sub-container">
+    <form class="form" action="/admin/logout">
+        <button class="btn btn-submit">Logout</button>
+    </form>
+</div>
+{% endblock %}

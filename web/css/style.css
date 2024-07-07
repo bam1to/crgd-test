@@ -1,0 +1,124 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    font-size: 1em;
+}
+
+body {
+    background-image: url(/web/image/waves.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.container {
+    width: 50%;
+    margin: auto;
+}
+
+.logo {
+    display: block;
+    margin: 2rem auto;
+}
+
+.sec-h {
+    color: #16396b;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.sub-container {
+    margin-bottom: 1rem;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form .form-input,
+.form .form-textarea {
+    padding: .8rem 1.2rem;
+    margin-bottom: 1rem;
+    border: 1px solid #f0f0f0;
+    background-color: rgba(252, 252, 252, .5);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form .form-input:focus-visible,
+.form .form-textarea:focus-visible {
+    outline: 1px solid #f1f1f1;
+}
+
+.form .form-textarea {
+    resize: vertical;
+}
+
+.btn {
+    padding: 1.2rem;
+    border-radius: 4px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-submit {
+    background-color: #16396b;
+    color: #ffffff;
+    font-weight: bolder;
+}
+
+.message {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    padding: 1.7rem;
+}
+
+.message-error {
+    background-color: #fff0f0;
+    border: 1px solid #ffc0c0;
+    border-radius: 4px;
+}
+
+.info-row {
+    display: flex;
+}
+
+.info-row-title,
+.info-row-actions {
+    min-width: 10%;
+}
+
+.info-row-description {
+    width: 100%;
+}
+
+.info-row-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.i-btn {
+    width: 25px;
+    height: 25px;
+    border: none;
+    cursor: pointer;
+    background-color: none;
+}
+
+.i-btn i {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.i-btn-edit {
+    content: url('/web/image/pencil.svg');
+}
