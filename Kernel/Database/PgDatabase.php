@@ -29,6 +29,11 @@ class PgDatabase extends Database implements DatabaseInterface
         return $this->prepareStatement($query, $params);
     }
 
+    public function getLastInsertedIndex(): string|false
+    {
+        return $this->pdoConnection->lastInsertId();
+    }
+
     private function prepareStatement(string $query, array $params): \PDOStatement
     {
         try {

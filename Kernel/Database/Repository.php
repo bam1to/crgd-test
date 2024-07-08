@@ -22,6 +22,7 @@ class Repository
             $statement = $this->database->getStatement($query, $params);
             return $statement->fetch(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
+            throw new \Exception($e->getMessage(), $e->getCode(), $e);
             // TODO: add exception handler
         }
     }
@@ -44,5 +45,16 @@ class Repository
         } catch (\Exception $e) {
             // TODO: add exception
         }
+    }
+
+    protected function getLastInsertedIndex(): string
+    {
+        $lastInsertedIndex = $this->database->getLastInsertedIndex();
+
+        if (!$lastInsertedIndex) {
+            throw new \Exception("Cannot found last inserted index");
+        }
+
+        return $lastInsertedIndex;
     }
 }
