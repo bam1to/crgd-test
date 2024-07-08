@@ -39,4 +39,11 @@ class NewsRepository extends Repository
 
         return $newsListDto;
     }
+
+    public function deleteNews(int $newsId): bool
+    {
+        return $this->delete("DELETE FROM news WHERE news_id = :id", [
+            'id' => $newsId
+        ]);
+    }
 }

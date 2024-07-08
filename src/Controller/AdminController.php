@@ -73,6 +73,19 @@ class AdminController extends Controller
         }
     }
 
+    public function actionNewsDelete()
+    {
+        try {
+            $newsId = (int)$_POST['id'];
+
+            http_response_code(200);
+            return json_encode((new NewsRepository())->deleteNews($newsId));
+        } catch (\Exception $e) {
+            http_response_code(400);
+            return json_encode($e->getMessage());
+        }
+    }
+
     public function actionLogout(): void
     {
         $this->authService->logout();

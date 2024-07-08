@@ -18,11 +18,11 @@ export default class NewsRow {
         newsDescription.classList.add('info-row-description');
         newsDescription.textContent = newsDto.newsDescription;
 
-        newsRow.append(newsTitle, newsDescription, this.getActionButtons());
+        newsRow.append(newsTitle, newsDescription, this.#getActionButtons());
 
         let newsContainer = document.querySelector('#news-container');
         if (!newsContainer) {
-            newsContainer = this.createNewsContainer();
+            newsContainer = this.#createNewsContainer();
         }
 
         newsContainer.append(newsRow);
@@ -31,26 +31,39 @@ export default class NewsRow {
     /**
      * @param {NewsDto} newsDto 
      */
-    update(newsDto) { }
-
-    delete(newsId) {
+    update(newsDto) {
 
     }
 
-    getActionButtons() {
+    delete(newsId) {
+        const newsRow = document.querySelector(`[data-news-id="${newsId}"]`);
+
+        if (!newsRow) {
+            return;
+        }
+
+        newsRow.remove();
+
+        // check whether there remain any news rows
+        if (document.querySelectorAll('[data-news-id]').length === 0) {
+            this.#destroyNewsContainer();
+        }
+    }
+
+    #getActionButtons() {
         let actionButtonsContainer = document.createElement('div');
         actionButtonsContainer.classList.add('info-row-actions');
         actionButtonsContainer.innerHTML = `
-            <button type="button" class="i-btn">
+            <button type="button" class="i-btn" data-action="edit">
                 <i class="i-btn-edit"></i>
             </button>
-            <button type="button" class="i-btn">
+            <button type="button" class="i-btn" data-action="delete">
                 <i class="i-btn-close"></i>
             </button>`;
         return actionButtonsContainer;
     }
 
-    createNewsContainer() {
+    #createNewsContainer() {
         const newsContainer = document.createElement('div');
 
         newsContainer.classList.add('sub-container');
@@ -61,5 +74,10 @@ export default class NewsRow {
         newsCreationForm.parentNode.insertBefore(newsContainer, newsCreationForm);
 
         return newsContainer;
+    }
+
+    #destroyNewsContainer() {
+        const newsContainer = document.querySelector('#news-container');
+        newsContainer.remove();
     }
 }

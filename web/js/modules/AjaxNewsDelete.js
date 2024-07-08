@@ -1,3 +1,6 @@
+import Message from "./Message.js";
+import NewsRow from "./NewsRow.js";
+
 export default class AjaxNewsDelete {
     #id;
 
@@ -10,12 +13,13 @@ export default class AjaxNewsDelete {
         const url = '/admin/news/delete';
         const method = 'POST';
 
+        const formData = new FormData();
+        formData.append('id', this.#id);
+
         try {
             const response = await fetch(url, {
                 method: method,
-                body: {
-                    id: this.#id
-                }
+                body: formData,
             });
 
             if (response.ok) {
@@ -27,13 +31,25 @@ export default class AjaxNewsDelete {
         } catch (error) {
             this.handleError(error);
         }
+
+        window.scroll({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
     }
 
     handleSuccess(data) {
         console.log('Row deleted successfully:', data);
+        let message = new Message('.message', { messageText: 'News was successfull deleted', messageType: 'success' });
+        message.createMessage();
+        const newsRow = new NewsRow();
+        newsRow.delete(this.#id);
     }
 
     handleError(error) {
         console.error('Error deleting row:', error);
+        let message = new Message('.message', { messageText: error.statusText, messageType: 'error' });
+        message.createMessage();
     }
 }

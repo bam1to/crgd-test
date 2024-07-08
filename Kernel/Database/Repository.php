@@ -16,7 +16,7 @@ class Repository
         $this->database = DatabaseBuilder::getDatabase();
     }
 
-    public function findOne(string $query = "", array $params = []): mixed
+    public function findOne(string $query = "", array $params = []): array|false
     {
         try {
             $statement = $this->database->getStatement($query, $params);
@@ -27,23 +27,25 @@ class Repository
         }
     }
 
-    public function findAll(string $query = "", array $params = []): array
+    public function findAll(string $query = "", array $params = []): array|false
     {
         try {
             $statement = $this->database->getStatement($query, $params);
             return $statement->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
-            // TODO: add exception
+            throw new \Exception($e->getMessage(), $e->getCode(), $e);
+            // TODO: add exception handler
         }
     }
 
-    public function insert(string $query = "", array $params = [])
+    public function insert(string $query = "", array $params = []): array|false
     {
         try {
             $statement = $this->database->getStatement($query, $params);
             return $statement->fetch(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
-            // TODO: add exception
+            throw new \Exception($e->getMessage(), $e->getCode(), $e);
+            // TODO: add exception handler
         }
     }
 
@@ -56,5 +58,15 @@ class Repository
         }
 
         return $lastInsertedIndex;
+    }
+
+    protected function delete(string $query = "", array $params = []): bool
+    {
+        try {
+            return $this->database->getStatement($query, $params)->rowCount() > 0;
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage(), $e->getCode(), $e);
+            // TODO: add exception handler
+        }
     }
 }
