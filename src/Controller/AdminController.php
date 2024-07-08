@@ -59,12 +59,18 @@ class AdminController extends Controller
 
     public function actionNewsCreate()
     {
-        $newsTitle = $_POST['_title'];
-        $newsDescription = $_POST['_description'];
+        try {
+            $newsTitle = $_POST['_title'];
+            $newsDescription = $_POST['_description'];
 
-        (new NewsRepository())->createNews(new IncomeNewsDto($newsTitle, $newsDescription));
+            $createdNews = (new NewsRepository())->createNews(new IncomeNewsDto($newsTitle, $newsDescription));
 
-        return json_encode('done');
+            http_response_code(200);
+            return json_encode($createdNews);
+        } catch (\Exception $e) {
+            http_response_code(400);
+            return json_encode($e->getMessage());
+        }
     }
 
     public function actionLogout(): void
