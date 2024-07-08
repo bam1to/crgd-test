@@ -1,3 +1,7 @@
+import NewsDto from "../dto/ NewsDto.js";
+import Message from "./Message.js";
+import NewsRow from "./NewsRow.js";
+
 export default class AjaxForm {
     #form = null;
 
@@ -33,16 +37,26 @@ export default class AjaxForm {
         } catch (error) {
             this.handleError(error);
         }
+
+        window.scroll({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
     }
 
     handleSuccess(data) {
         console.log('Form submitted successfully:', data);
+        let message = new Message('.message', { messageText: 'News was successfull created', messageType: 'success' });
+        message.createMessage();
+        let newsRow = new NewsRow(new NewsDto(data.newsId, data.title, data.description));
+        newsRow.create();
         this.#form.reset();
-        // Дополнительная логика обработки успешного ответа
     }
 
     handleError(error) {
+        let message = new Message('.message', { messageText: error.statusText, messageType: 'error' });
+        message.createMessage();
         console.error('Error submitting form:', error);
-        // Дополнительная логика обработки ошибок
     }
 }

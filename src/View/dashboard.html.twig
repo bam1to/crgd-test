@@ -3,8 +3,9 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+<div class="message" style="display: none;"></div>
 {% if not newsList is empty %}
-<div class="sub-container">
+<div class="sub-container" id="news-container">
     <h2 class="sec-h">All News</h2>
     {% for news in newsList %}
     <div class="info-row" data-news-id="{{news.newsId}}">
@@ -15,10 +16,10 @@
             {{news.description}}
         </div>
         <div class="info-row-actions">
-            <button type="button" class="i-btn">
+            <button type="button" class="i-btn" data-action="edit">
                 <i class="i-btn-edit"></i>
             </button>
-            <button type="button" class="i-btn">
+            <button type="button" class="i-btn" data-action="delete">
                 <i class="i-btn-close"></i>
             </button>
         </div>
@@ -26,7 +27,7 @@
     {% endfor %}
 </div>
 {% endif %}
-<div class="sub-container">
+<div class="sub-container" id="news-creation-form">
     <form class="form" action="/admin/news/create" method="POST" id="create-news">
         <h2 class="sec-h">Create News</h2>
         <input class="form-input" required type="text" placeholder="Title" name="_title" id="news-title">
