@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kernel\Routing;
 
+use Kernel\Config;
 use Kernel\Routing\Dto\UrlDto;
 
 /**
@@ -18,6 +19,7 @@ class UrlParser
         $parsedUrl = parse_url($requestUri);
 
         $path = $parsedUrl['path'] ?? '';
+        $path = $path === '/' ? Config::get('url.homepage.before_login') : $path;
         $parts = explode('/', trim($path, '/'));
 
         if (empty($parts)) {
