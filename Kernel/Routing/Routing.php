@@ -5,32 +5,39 @@ declare(strict_types=1);
 namespace Kernel\Routing;
 
 use Kernel\Config;
+use Kernel\Routing\Dto\UrlDto;
 use Kernel\Routing\Exception\RouteNotFoundException;
 
-class Routing
+class Routing implements RoutingInterface
 {
-    public function processRouting()
+    public function processRouting(): void
     {
-        // check controllers
         $controllers = $this->parseControllers();
-
-        // parse url
         $urlDto = (new UrlParser())->parseUrl();
 
         foreach ($controllers as $controller) {
             if ($controller->getShortName() === $urlDto->controllerName . 'Controller') {
-                try {
-                    $action = $controller->getMethod($urlDto->controllerAction === '' ? 'actionIndex' : 'action' . $urlDto->controllerAction);
-                } catch (\ReflectionException $e) {
-                    throw new RouteNotFoundException($urlDto->originalUrl . ' has not found.', 404, $e);
-                }
-                $controllerInstance = new ($controller->getName());
-                $actionName = $action->name;
-                echo $controllerInstance->$actionName();
-                exit();
+                $this->executeAction($controller, $urlDto);
+                return;
             }
         }
         throw new RouteNotFoundException($urlDto->originalUrl . ' has not found.', 404);
+    }
+
+    private function executeAction(\ReflectionClass $controller, UrlDto $urlDto): void
+    {
+        try {
+            $action = $controller->getMethod(
+                $urlDto->controllerAction === '' ? 'actionIndex' : 'action' . ucfirst($urlDto->controllerAction)
+            );
+        } catch (\ReflectionException $e) {
+            throw new RouteNotFoundException($urlDto->originalUrl . ' not found.', 404, $e);
+        }
+
+        $controllerInstance = $controller->newInstance();
+        $actionName = $action->getName();
+        echo $controllerInstance->$actionName();
+        exit();
     }
 
     /**
@@ -39,32 +46,14 @@ class Routing
     private function parseControllers(): array
     {
         $controllersFolder = Config::get('base.project_root') . '/Controller';
-
         $classes = [];
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($controllersFolder));
 
         foreach ($iterator as $file) {
             if ($file->isFile() && preg_match('/Controller\.php$/', $file->getFilename())) {
-                $filePath = $file->getRealPath();
-
-                $fileContent = file_get_contents($filePath);
-
-                $namespace = $this->extractNamespace($fileContent);
-
-                if (null === $namespace) {
-                    return [];
-                }
-
-                if (preg_match_all('/class\s+([a-zA-Z0-9_]+)/', $fileContent, $matches)) {
-                    foreach ($matches[1] as $className) {
-                        try {
-                            $reflectionClass = new \ReflectionClass($namespace . '\\' . $className);
-
-                            $classes[] = $reflectionClass;
-                        } catch (\ReflectionException $e) {
-                            return [];
-                        }
-                    }
+                $className = $this->getClassName($file->getRealPath());
+                if ($className) {
+                    $classes[] = $className;
                 }
             }
         }
@@ -72,12 +61,26 @@ class Routing
         return $classes;
     }
 
+    private function getClassName(string $filePath): ?\ReflectionClass
+    {
+        $fileContent = file_get_contents($filePath);
+        $namespace = $this->extractNamespace($fileContent);
+
+        if ($namespace && preg_match('/class\s+([a-zA-Z0-9_]+)/', $fileContent, $matches)) {
+            $fullClassName = $namespace . '\\' . $matches[1];
+            try {
+                return new \ReflectionClass($fullClassName);
+            } catch (\ReflectionException $e) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
     private function extractNamespace(string $fileContent): ?string
     {
-        $namespacePattern = '/namespace\s+([^;]+);/';
-
-        // Ищем совпадения
-        if (preg_match($namespacePattern, $fileContent, $matches)) {
+        if (preg_match('/namespace\s+([^;]+);/', $fileContent, $matches)) {
             return trim($matches[1]);
         }
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Kernel\Database;
 
+use Kernel\Database\Exceptions\DatabaseException;
+
 /**
  * Base class for all repositories
  */
@@ -16,57 +18,14 @@ class Repository
         $this->database = DatabaseBuilder::getDatabase();
     }
 
-    public function findOne(string $query = "", array $params = []): array|false
+    public function findOne(string $query, array $params = []): array|false
     {
-        try {
-            $statement = $this->database->getStatement($query, $params);
-            return $statement->fetch(\PDO::FETCH_ASSOC);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage(), $e->getCode(), $e);
-            // TODO: add exception handler
-        }
+        return $this->executeQuery($query, $params)->fetch(\PDO::FETCH_ASSOC);
     }
 
-    public function findAll(string $query = "", array $params = []): array|false
+    public function findAll(string $query, array $params = []): array|false
     {
-        try {
-            $statement = $this->database->getStatement($query, $params);
-            return $statement->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage(), $e->getCode(), $e);
-            // TODO: add exception handler
-        }
-    }
-
-    public function insert(string $query = "", array $params = []): array|false
-    {
-        try {
-            $statement = $this->database->getStatement($query, $params);
-            return $statement->fetch(\PDO::FETCH_ASSOC);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage(), $e->getCode(), $e);
-            // TODO: add exception handler
-        }
-    }
-
-    public function update(string $query = "", array $params = []): bool
-    {
-        try {
-            return $this->database->getStatement($query, $params)->rowCount() > 0;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage(), $e->getCode(), $e);
-            // TODO: add exception handler
-        }
-    }
-
-    protected function delete(string $query = "", array $params = []): bool
-    {
-        try {
-            return $this->database->getStatement($query, $params)->rowCount() > 0;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage(), $e->getCode(), $e);
-            // TODO: add exception handler
-        }
+        return $this->executeQuery($query, $params)->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     protected function getLastInsertedIndex(): string
@@ -74,9 +33,23 @@ class Repository
         $lastInsertedIndex = $this->database->getLastInsertedIndex();
 
         if (!$lastInsertedIndex) {
-            throw new \Exception("Cannot found last inserted index");
+            throw new DatabaseException("Cannot found last inserted index");
         }
 
         return $lastInsertedIndex;
+    }
+
+    public function execute(string $query, array $params): bool
+    {
+        return $this->executeQuery($query, $params)->rowCount() > 0;
+    }
+
+    private function executeQuery(string $query, array $params): \PDOStatement
+    {
+        try {
+            return $this->database->getStatement($query, $params);
+        } catch (\Exception $e) {
+            throw new DatabaseException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }

@@ -12,7 +12,7 @@ class NewsRepository extends Repository
 {
     public function createNews(IncomeNewsDto $newsDto): News
     {
-        $this->insert('INSERT INTO news (news_title, news_description) VALUES (:title, :description)', [
+        $this->execute('INSERT INTO news (news_title, news_description) VALUES (:title, :description)', [
             'title' => $newsDto->title,
             'description' => $newsDto->description
         ]);
@@ -42,7 +42,7 @@ class NewsRepository extends Repository
 
     public function updateNews(IncomeNewsDto $newsDto): bool
     {
-        return $this->update('UPDATE news SET news_title = :news_title, news_description = :news_description WHERE news_id = :news_id', [
+        return $this->execute('UPDATE news SET news_title = :news_title, news_description = :news_description WHERE news_id = :news_id', [
             'news_title' => $newsDto->title,
             'news_description' => $newsDto->description,
             'news_id' => $newsDto->id
@@ -51,7 +51,7 @@ class NewsRepository extends Repository
 
     public function deleteNews(int $newsId): bool
     {
-        return $this->delete("DELETE FROM news WHERE news_id = :id", [
+        return $this->execute("DELETE FROM news WHERE news_id = :id", [
             'id' => $newsId
         ]);
     }

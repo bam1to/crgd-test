@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Kernel;
 
 use Kernel\Database\DatabaseBuilder;
+use Kernel\Database\Exceptions\DatabaseException;
+use Kernel\Exceptions\AppException;
+use Kernel\Routing\Exceptions\RoutingException;
 use Kernel\Routing\Routing;
 
 class Kernel
@@ -20,12 +23,17 @@ class Kernel
 
             // process routing
             (new Routing())->processRouting();
-        } catch (\Exception $e) {
-            print_r($e->getMessage());
-        } catch (\Error $e) {
-            print_r($e->getMessage());
+        } catch (AppException | DatabaseException | RoutingException $e) {
+            $this->handleException($e);
+        } catch (\Throwable $e) {
+            $this->handleException($e);
         } finally {
-            die();
+            exit;
         }
+    }
+
+    private function handleException(\Throwable $e): void
+    {
+        print_r($e->getMessage());
     }
 }

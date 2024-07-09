@@ -14,7 +14,7 @@ class UrlParser
 {
     public function parseUrl(): ?UrlDto
     {
-        $requestUri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
+        $requestUri = $this->sanitizeUrl($_SERVER['REQUEST_URI'] ?? '');
         $parsedUrl = parse_url($requestUri);
 
         $path = $parsedUrl['path'] ?? '';
@@ -30,6 +30,11 @@ class UrlParser
         $action = $this->toCamelCase(implode('-', $actionParts));
 
         return new UrlDto($requestUri, $controllerName, $action);
+    }
+
+    private function sanitizeUrl(string $url): string
+    {
+        return filter_var($url, FILTER_SANITIZE_URL);
     }
 
     private function toCamelCase(string $string): string

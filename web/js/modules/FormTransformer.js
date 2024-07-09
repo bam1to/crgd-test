@@ -1,7 +1,7 @@
 export default class FormTransformer {
     transformToEditForm(newsId) {
         const updateForm = document.querySelector('#create-news');
-        updateForm.action = '/admin/news/update';
+        updateForm.action = '/news/update';
         updateForm.dataset.role = 'edit';
 
         const formHeader = updateForm.querySelector('[data-role="form-header"]');
@@ -19,7 +19,9 @@ export default class FormTransformer {
         updateForm.querySelector('#news-description').value = newsRowDescription;
         updateForm.querySelector('#news-id').value = newsId;
 
-        formHeader.insertAdjacentHTML('afterend', this.#getCloseButton());
+        if (!updateForm.querySelector('[data-action="close"]')) {
+            formHeader.insertAdjacentHTML('afterend', this.#getCloseButton());
+        }
     }
 
     #getCloseButton() {
@@ -31,7 +33,7 @@ export default class FormTransformer {
 
     transformToCreateForm() {
         const createForm = document.querySelector('#create-news');
-        createForm.action = '/admin/news/create';
+        createForm.action = '/news/create';
         createForm.dataset.role = 'create';
 
         const formHeader = createForm.querySelector('[data-role="form-header"]');

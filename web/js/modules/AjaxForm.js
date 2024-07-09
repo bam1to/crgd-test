@@ -47,32 +47,38 @@ export default class AjaxForm {
     }
 
     handleSuccess(data) {
-        console.log('Form submitted successfully:', data);
+        let message = new Message('.message', { messageText: '', messageType: 'success' });
         switch (this.#form.dataset.role) {
             case 'edit': {
-                let message = new Message('.message', { messageText: 'News was successfully updated', messageType: 'success' });
-                message.createMessage();
-                let newsRow = new NewsRow();
-                newsRow.update(data)
-                let formTransformer = new FormTransformer();
-                formTransformer.transformToCreateForm();
+                message.messageParams.messageText = 'News was successfully updated';
+                this.#updateNews(data);
                 break;
             }
             case 'create': {
-                let message = new Message('.message', { messageText: 'News was successfully created', messageType: 'success' });
-                message.createMessage();
-                let newsRow = new NewsRow();
-                newsRow.create(new NewsDto(data.newsId, data.title, data.description));
+                message.messageParams.messageText = 'News was successfully created';
+                this.#createNews(data);
                 break
             }
         }
+        message.createMessage();
         this.#form.reset();
 
+    }
+
+    #updateNews() {
+        let newsRow = new NewsRow();
+        newsRow.update(data)
+        let formTransformer = new FormTransformer();
+        formTransformer.transformToCreateForm();
+    }
+
+    #createNews(data) {
+        const newsRow = new NewsRow();
+        newsRow.create(new NewsDto(data.newsId, data.title, data.description));
     }
 
     handleError(error) {
         let message = new Message('.message', { messageText: error.statusText, messageType: 'error' });
         message.createMessage();
-        console.error('Error submitting form:', error);
     }
 }

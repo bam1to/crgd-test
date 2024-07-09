@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Kernel\Database;
 
+use Kernel\Exceptions\SingletonException;
+
 class Database
 {
     private static ?Database $instance = null;
@@ -14,12 +16,12 @@ class Database
 
     public function __clone()
     {
-        throw new \Exception('Database object cannot be cloned');
+        throw new SingletonException('Database object cannot be cloned');
     }
 
     public function __wakeup()
     {
-        throw new \Exception('Cannot be unserialized');
+        throw new SingletonException('Cannot be unserialized');
     }
 
     public static function getInstance()

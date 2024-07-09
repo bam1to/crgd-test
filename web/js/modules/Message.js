@@ -1,12 +1,12 @@
 export default class Message {
     #messageSelector
-    #messageParams
+    messageParams
 
     #messageTypes = ['error', 'success'];
 
     constructor(messageSelector, messageParams = {}) {
         this.#messageSelector = messageSelector;
-        this.#messageParams = messageParams;
+        this.messageParams = messageParams;
     }
 
     createMessage() {
@@ -26,12 +26,12 @@ export default class Message {
     }
 
     #getMessageType() {
-        const passedMessageType = this.#messageParams.messageType || null;
+        const passedMessageType = this.messageParams.messageType || null;
 
         return this.#messageTypes.find(messageType => messageType === passedMessageType);
     }
 
     #getMessageText() {
-        return this.#messageParams.messageText || '';
+        return this.messageParams.messageText || '';
     }
 }

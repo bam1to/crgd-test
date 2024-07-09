@@ -6,20 +6,17 @@ namespace Kernel;
 
 use Kernel\Exception\NoFileException;
 
-class Config
+class Config implements ConfigInterface
 {
     private static array $config = [];
 
-    /**
-     * @throws NoFileException
-     */
     public static function load(string $configFile): void
     {
-        if (file_exists($configFile)) {
-            static::$config = require_once $configFile;
-        } else {
-            throw new NoFileException();
+        if (!file_exists($configFile)) {
+            throw new NoFileException("Config file not found: $configFile");
         }
+
+        static::$config = require_once $configFile;
     }
 
     public static function get(string $configKey, mixed $default = null): mixed

@@ -7,8 +7,8 @@ return [
     ],
     'url' => [
         'homepage' => [
-            'before_login' => '/admin/login',
-            'after_login' => '/admin/dashboard'
+            'before_login' => '/auth/login',
+            'after_login' => '/news/dashboard'
         ],
     ],
     'database' => [

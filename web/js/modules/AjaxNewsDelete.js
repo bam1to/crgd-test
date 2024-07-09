@@ -16,7 +16,7 @@ export default class AjaxNewsDelete {
             return;
         }
 
-        const url = '/admin/news/delete';
+        const url = '/news/delete';
         const method = 'POST';
 
         const formData = new FormData();

@@ -6,4 +6,5 @@ namespace Kernel\Database\Exception;
 
 class ConnectionException extends \PDOException
 {
+    protected $message = 'Database connection error.';
 }

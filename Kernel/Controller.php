@@ -28,4 +28,9 @@ class Controller
         header('Location: ' . $url);
         exit();
     }
+
+    protected function isPostRequest(): bool
+    {
+        return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
 }

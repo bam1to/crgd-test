@@ -6,6 +6,7 @@ namespace Kernel\Database;
 
 use Kernel\Config;
 use Kernel\Database\Exception\ConnectionException;
+use Kernel\Database\Exceptions\DatabaseException;
 
 class PgDatabase extends Database implements DatabaseInterface
 {
@@ -34,13 +35,16 @@ class PgDatabase extends Database implements DatabaseInterface
         return $this->pdoConnection->lastInsertId();
     }
 
+    /**
+     * @throws DatabaseException
+     */
     private function prepareStatement(string $query, array $params): \PDOStatement
     {
         try {
             $statement = $this->pdoConnection->prepare($query);
 
             if ($statement === false) {
-                throw new \Exception('Cannot prepare statement for: ' . $query);
+                throw new DatabaseException('Cannot prepare statement for: ' . $query);
             }
 
             foreach ($params as $key => $param) {
@@ -50,10 +54,8 @@ class PgDatabase extends Database implements DatabaseInterface
             $statement->execute();
 
             return $statement;
-        } catch (\Exception $exeption) {
-            throw new \Exception($exeption->getMessage());
         } catch (\PDOException $pdoException) {
-            throw new \Exception('Cannot prepare statement for: ' . $query, $pdoException->getCode(), $pdoException);
+            throw new DatabaseException('Cannot prepare statement for: ' . $query, $pdoException->getCode(), $pdoException);
         }
     }
 }
