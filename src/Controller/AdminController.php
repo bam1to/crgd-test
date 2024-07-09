@@ -57,13 +57,20 @@ class AdminController extends Controller
         return $this->twig->render('dashboard.html.twig', ['newsList' => $newsList]);
     }
 
-    public function actionNewsCreate()
+    public function actionNewsCreate(): string
     {
+        if (!$this->authService->isAuthenticated()) {
+            $this->redirect(Config::get('url.homepage.before_login'));
+        }
+
         try {
             $newsTitle = $_POST['_title'];
             $newsDescription = $_POST['_description'];
 
-            $createdNews = (new NewsRepository())->createNews(new IncomeNewsDto($newsTitle, $newsDescription));
+            $createdNews = (new NewsRepository())->createNews(new IncomeNewsDto(
+                title: $newsTitle,
+                description: $newsDescription
+            ));
 
             http_response_code(200);
             return json_encode($createdNews);
@@ -73,13 +80,42 @@ class AdminController extends Controller
         }
     }
 
-    public function actionNewsDelete()
+    public function actionNewsDelete(): string
     {
+        if (!$this->authService->isAuthenticated()) {
+            $this->redirect(Config::get('url.homepage.before_login'));
+        }
+
         try {
             $newsId = (int)$_POST['id'];
 
             http_response_code(200);
             return json_encode((new NewsRepository())->deleteNews($newsId));
+        } catch (\Exception $e) {
+            http_response_code(400);
+            return json_encode($e->getMessage());
+        }
+    }
+
+    public function actionNewsUpdate(): string
+    {
+        try {
+            $newsId = (int) $_POST['_id'];
+            $newsTitle = $_POST['_title'];
+            $newsDescription = $_POST['_description'];
+
+            http_response_code(200);
+            $isUpdated = json_encode((new NewsRepository())->updateNews(new IncomeNewsDto(
+                id: $newsId,
+                title: $newsTitle,
+                description: $newsDescription
+            )));
+
+            if ($isUpdated) {
+                return json_encode($newsId);
+            } else {
+                throw new \Exception("Couldn't save");
+            }
         } catch (\Exception $e) {
             http_response_code(400);
             return json_encode($e->getMessage());

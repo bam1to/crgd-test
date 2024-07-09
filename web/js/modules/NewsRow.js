@@ -29,10 +29,16 @@ export default class NewsRow {
     }
 
     /**
-     * @param {NewsDto} newsDto 
+     * 
+     * @param {int} newsId 
      */
-    update(newsDto) {
+    update(newsId) {
+        const newsRow = document.querySelector(`[data-news-id="${newsId}"]`);
+        const newsRowNewTitle = document.querySelector('#news-title').value,
+            newsRowNewDescription = document.querySelector('#news-description').value;
 
+        newsRow.querySelector('.info-row-title').innerText = newsRowNewTitle;
+        newsRow.querySelector('.info-row-description').innerText = newsRowNewDescription;
     }
 
     delete(newsId) {

@@ -8,7 +8,8 @@ readonly class IncomeNewsDto
 {
     public function __construct(
         public string $title,
-        public string $description
+        public string $description,
+        public int $id = 0
     ) {
     }
 }

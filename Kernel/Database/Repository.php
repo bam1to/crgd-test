@@ -49,15 +49,14 @@ class Repository
         }
     }
 
-    protected function getLastInsertedIndex(): string
+    public function update(string $query = "", array $params = []): bool
     {
-        $lastInsertedIndex = $this->database->getLastInsertedIndex();
-
-        if (!$lastInsertedIndex) {
-            throw new \Exception("Cannot found last inserted index");
+        try {
+            return $this->database->getStatement($query, $params)->rowCount() > 0;
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage(), $e->getCode(), $e);
+            // TODO: add exception handler
         }
-
-        return $lastInsertedIndex;
     }
 
     protected function delete(string $query = "", array $params = []): bool
@@ -68,5 +67,16 @@ class Repository
             throw new \Exception($e->getMessage(), $e->getCode(), $e);
             // TODO: add exception handler
         }
+    }
+
+    protected function getLastInsertedIndex(): string
+    {
+        $lastInsertedIndex = $this->database->getLastInsertedIndex();
+
+        if (!$lastInsertedIndex) {
+            throw new \Exception("Cannot found last inserted index");
+        }
+
+        return $lastInsertedIndex;
     }
 }

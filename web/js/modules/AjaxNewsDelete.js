@@ -10,6 +10,12 @@ export default class AjaxNewsDelete {
     }
 
     async #delete() {
+        const formType = document.querySelector('form[data-role]');
+        if (formType.dataset.role === 'edit') {
+            alert('You cannot delete elements while editing!');
+            return;
+        }
+
         const url = '/admin/news/delete';
         const method = 'POST';
 

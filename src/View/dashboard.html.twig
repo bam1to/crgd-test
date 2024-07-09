@@ -28,12 +28,15 @@
 </div>
 {% endif %}
 <div class="sub-container" id="news-creation-form">
-    <form class="form" action="/admin/news/create" method="POST" id="create-news">
-        <h2 class="sec-h">Create News</h2>
+    <form class="form" action="/admin/news/create" method="POST" id="create-news" data-role="create">
+        <div class="form-header">
+            <h2 class="sec-h" data-role="form-header">Create News</h2>
+        </div>
         <input class="form-input" required type="text" placeholder="Title" name="_title" id="news-title">
         <textarea class="form-textarea" required name="_description" placeholder="Description" id="news-description"
             cols="30" rows="10"></textarea>
-        <button class="btn btn-submit">Create</button>
+        <input type="hidden" name="_id" value="0" id="news-id">
+        <button class="btn btn-submit" data-role="form-submit">Create</button>
     </form>
 </div>
 <div class="sub-container">

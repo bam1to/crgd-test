@@ -1,4 +1,5 @@
 import NewsDto from "../dto/ NewsDto.js";
+import FormTransformer from "./FormTransformer.js";
 import Message from "./Message.js";
 import NewsRow from "./NewsRow.js";
 
@@ -47,11 +48,26 @@ export default class AjaxForm {
 
     handleSuccess(data) {
         console.log('Form submitted successfully:', data);
-        let message = new Message('.message', { messageText: 'News was successfull created', messageType: 'success' });
-        message.createMessage();
-        let newsRow = new NewsRow(new NewsDto(data.newsId, data.title, data.description));
-        newsRow.create();
+        switch (this.#form.dataset.role) {
+            case 'edit': {
+                let message = new Message('.message', { messageText: 'News was successfully updated', messageType: 'success' });
+                message.createMessage();
+                let newsRow = new NewsRow();
+                newsRow.update(data)
+                let formTransformer = new FormTransformer();
+                formTransformer.transformToCreateForm();
+                break;
+            }
+            case 'create': {
+                let message = new Message('.message', { messageText: 'News was successfully created', messageType: 'success' });
+                message.createMessage();
+                let newsRow = new NewsRow();
+                newsRow.create(new NewsDto(data.newsId, data.title, data.description));
+                break
+            }
+        }
         this.#form.reset();
+
     }
 
     handleError(error) {

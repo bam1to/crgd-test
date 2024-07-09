@@ -40,6 +40,15 @@ class NewsRepository extends Repository
         return $newsListDto;
     }
 
+    public function updateNews(IncomeNewsDto $newsDto): bool
+    {
+        return $this->update('UPDATE news SET news_title = :news_title, news_description = :news_description WHERE news_id = :news_id', [
+            'news_title' => $newsDto->title,
+            'news_description' => $newsDto->description,
+            'news_id' => $newsDto->id
+        ]);
+    }
+
     public function deleteNews(int $newsId): bool
     {
         return $this->delete("DELETE FROM news WHERE news_id = :id", [
